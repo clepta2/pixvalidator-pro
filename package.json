@@ -1,0 +1,40 @@
+{
+  "name": "pixvalidator-pro",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "SDK e API Oficial de Decodificação, Validação EMVCo e Geração de Códigos Pix Copia e Cola / QR Code Pix (Banco Central do Brasil) com verificação de CRC16 CCITT e detecção de chaves na borda Cloudflare Edge (<2ms).",
+  "main": "pixvalidator-pro.js",
+  "module": "pixvalidator-pro.js",
+  "types": "types/index.d.ts",
+  "scripts": {
+    "test": "node test.js",
+    "deploy": "wrangler deploy"
+  },
+  "keywords": [
+    "pix",
+    "emvco",
+    "banco-central",
+    "bacen",
+    "pix-copia-e-cola",
+    "qr-code-pix",
+    "crc16",
+    "crc16-ccitt",
+    "validador-pix",
+    "chave-pix",
+    "pagamentos-instantaneos",
+    "cloudflare-worker",
+    "edge-computing",
+    "brasil",
+    "sdk"
+  ],
+  "author": "clepta2 <clepta2@gmail.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/clepta2/pixvalidator-pro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/clepta2/pixvalidator-pro/issues"
+  },
+  "homepage": "https://github.com/clepta2/pixvalidator-pro#readme"
+}
