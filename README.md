@@ -84,7 +84,21 @@ curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/gera
 
 # Validação isolada de chave
 curl -X GET "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/chave?chave=52998224725"
+
+# Validação em lote (Batch) de Chaves — até 50 chaves Pro ou 5 gratuitas
+curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/validar-lote" \
+  -H "Content-Type: application/json" \
+  -d '{"chaves": ["clepta2@gmail.com", "52998224725", "+5511987654321"]}'
 ```
+
+---
+
+## 🛡️ Rate Limiting & Proteção de Cotas
+
+- **Plano Gratuito:** até 60 req/min por isolate de borda.
+- **Plano Pro / Enterprise (`x-api-key`):** até 300 req/min.
+- Para processamento em volume (conciliação bancária/checkouts massivos), utilize a rota de lote (`/api/pix/validar-lote`) para validar até 50 itens por chamada.
+- O contador em memória do Worker é local por isolate e não representa uma cota diária global centralizada.
 
 ---
 

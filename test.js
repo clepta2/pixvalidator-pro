@@ -89,4 +89,31 @@ const mediaPorOp = (elapsed / ITERACOES).toFixed(4);
 console.log(`\n⚡ Benchmark de Performance: ${ITERACOES} validações em ${elapsed.toFixed(2)}ms (Média: ${mediaPorOp}ms por chamada)`);
 console.assert(elapsed / ITERACOES < 1.0, 'Validação deve ocorrer em sub-1ms');
 
+// 8. Testes de Lote do Worker
+import worker from './worker.js';
+console.log('\n--- 8. Testes do Endpoint de Lote do Worker ---');
+const resLoteChaves = await worker.fetch(new Request('https://api.test/api/pix/validar-lote', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ chaves: ['clepta2@gmail.com', '00000000000', '+5511987654321'] })
+}), {});
+const bodyLoteChaves = await resLoteChaves.json();
+console.assert(resLoteChaves.status === 200, 'Status deve ser 200');
+console.assert(bodyLoteChaves.totalSolicitado === 3, 'Deve processar 3 chaves');
+console.assert(bodyLoteChaves.totalValidos === 2, '2 válidas');
+console.assert(bodyLoteChaves.totalInvalidos === 1, '1 inválida');
+console.log('✅ Validação em lote de chaves Pix OK');
+
+const resExcesso = await worker.fetch(new Request('https://api.test/api/pix/validar-lote', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ chaves: Array(6).fill('teste@email.com') })
+}), {});
+console.assert(resExcesso.status === 413, 'Excesso gratuito deve retornar 413');
+console.log('✅ Limite de lote gratuito respeitado (413)');
+
+const resMetodo = await worker.fetch(new Request('https://api.test/api/pix/validar-lote'), {});
+console.assert(resMetodo.status === 405, 'GET deve retornar 405');
+console.log('✅ Método incorreto rejeitado');
+
 console.log('\n🎉 TODOS OS TESTES UNITÁRIOS DO PIXVALIDATOR PRO PASSARAM COM SUCESSO!');
