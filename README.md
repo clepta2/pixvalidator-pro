@@ -67,12 +67,12 @@ console.log(novoPix.payload); // String completa pronta para copiar e colar
 
 ```bash
 # Decodificar e validar integridade do Pix
-curl -X POST "https://pixvalidator-pro-api.diffstore264.workers.dev/api/pix/decodificar" \
+curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/decodificar" \
   -H "Content-Type: application/json" \
   -d '{"codigo": "00020101021126670014br.gov.bcb.pix0117clepta2@gmail.com520400005303986540549.905802BR5911CLEPTA TECH6009SAO PAULO62140510FATURA102963044AEB"}'
 
 # Gerar novo código Pix Copia e Cola
-curl -X POST "https://pixvalidator-pro-api.diffstore264.workers.dev/api/pix/gerar" \
+curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/gerar" \
   -H "Content-Type: application/json" \
   -d '{
     "chave": "clepta2@gmail.com",
@@ -83,7 +83,7 @@ curl -X POST "https://pixvalidator-pro-api.diffstore264.workers.dev/api/pix/gera
   }'
 
 # Validação isolada de chave
-curl -X GET "https://pixvalidator-pro-api.diffstore264.workers.dev/api/pix/chave?chave=52998224725"
+curl -X GET "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/chave?chave=52998224725"
 ```
 
 ---

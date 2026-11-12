@@ -466,13 +466,13 @@
 
         <h3 style="font-size: 1rem; margin: 20px 0 8px;">1. Decodificar e Validar Pix</h3>
         <p style="font-size: 0.85rem; color: var(--text-muted);"><code>POST /api/pix/decodificar</code> ou <code>GET /api/pix/decodificar?codigo=000201...</code></p>
-        <pre>curl -X POST "https://pixvalidator-pro-api.diffstore264.workers.dev/api/pix/decodificar" \
+        <pre>curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/decodificar" \
   -H "Content-Type: application/json" \
   -d '{"codigo": "00020101021126670014br.gov.bcb.pix0117clepta2@gmail.com520400005303986540549.905802BR5911CLEPTA TECH6009SAO PAULO62140510PEDIDO982163045E7A"}'</pre>
 
         <h3 style="font-size: 1rem; margin: 20px 0 8px;">2. Gerar Código Pix Copia e Cola Oficial</h3>
         <p style="font-size: 0.85rem; color: var(--text-muted);"><code>POST /api/pix/gerar</code> ou <code>GET /api/pix/gerar?chave=...&nome=...&valor=...</code></p>
-        <pre>curl -X POST "https://pixvalidator-pro-api.diffstore264.workers.dev/api/pix/gerar" \
+        <pre>curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/gerar" \
   -H "Content-Type: application/json" \
   -d '{
     "chave": "clepta2@gmail.com",
@@ -484,7 +484,7 @@
 
         <h3 style="font-size: 1rem; margin: 20px 0 8px;">3. Validar Chave Pix Isolada</h3>
         <p style="font-size: 0.85rem; color: var(--text-muted);"><code>GET /api/pix/chave?chave=52998224725</code></p>
-        <pre>curl -X GET "https://pixvalidator-pro-api.diffstore264.workers.dev/api/pix/chave?chave=+5511987654321"</pre>
+        <pre>curl -X GET "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/chave?chave=+5511987654321"</pre>
       </div>
     </div>
   </div>
