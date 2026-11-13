@@ -70,8 +70,17 @@ export default {
     // 3. Autenticação e Rate Limit
     const clientIp = request.headers.get('CF-Connecting-IP') || request.headers.get('x-real-ip') || '127.0.0.1';
     const authHeader = request.headers.get('Authorization') || request.headers.get('x-api-key') || '';
-    const hasApiKey = authHeader.length > 5;
-    const isCommercial = authHeader.length > 10;
+    const cleanKey = authHeader.replace(/^Bearer\s+/i, '').trim();
+    const hasApiKey = Boolean(
+      cleanKey && (
+        cleanKey.startsWith('pix_live_') || 
+        cleanKey.startsWith('pix_pro_') || 
+        cleanKey.startsWith('pix_master_') || 
+        cleanKey.startsWith('pnt_live_') ||
+        (env && (env.API_KEY === cleanKey || env.PRO_KEY === cleanKey))
+      ) && cleanKey.length >= 16
+    );
+    const isCommercial = hasApiKey;
     const maxReqs = isCommercial ? 300 : 60;
     const rl = checkRateLimit(clientIp, maxReqs, 60000);
 
@@ -287,7 +296,7 @@ export default {
     }
 
     // 8. Gerador Oficial de Pix Copia e Cola (/api/pix/gerar ou /api/gerar)
-    if (path === '/api/pix/gerar' || path === '/api/gerar') {
+    if (path === '/api/pix/gerar' || path === '/api/gerar' || path === '/api/pix/copia-e-cola' || path === '/api/pix/gerar-qrcode') {
       let params = {};
       if (request.method === 'POST') {
         try {
@@ -317,7 +326,7 @@ export default {
     }
 
     // 9. Validação Isolada de Chave Pix (/api/pix/chave ou /api/chave)
-    if (path === '/api/pix/chave' || path === '/api/chave') {
+    if (path === '/api/pix/chave' || path === '/api/chave' || path === '/api/pix/validar-chave') {
       const chave = url.searchParams.get('chave') || url.searchParams.get('valor') || '';
       const resChave = PixValidatorPro.validarChave(chave);
       const statusHttp = resChave.valido ? 200 : 400;
