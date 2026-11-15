@@ -1,12 +1,12 @@
-import fs from 'fs';
+﻿import fs from 'fs';
 
 const html = `<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PixValidator Pro • Validador EMVCo & Gerador Pix Anycast • Ponte API Market</title>
-  <meta name="description" content="Validador e Decodificador Oficial de Pix Copia e Cola e QR Code EMVCo (Banco Central do Brasil) com verificação de integridade CRC16 CCITT na Cloudflare Edge." />
+  <title>PixValidator Pro â€¢ Validador EMVCo & Gerador Pix Anycast â€¢ Ponte API Market</title>
+  <meta name="description" content="Validador e Decodificador Oficial de Pix Copia e Cola e QR Code EMVCo (Banco Central do Brasil) com verificaÃ§Ã£o de integridade CRC16 CCITT na Cloudflare Edge." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -37,11 +37,22 @@ const html = `<!DOCTYPE html>
     .playground-split {
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
-      gap: 26px;
+      gap: 24px;
       margin-top: 24px;
+      width: 100%;
+      min-width: 0;
     }
     @media (max-width: 1100px) {
-      .playground-split { grid-template-columns: 1fr; }
+      .playground-split { grid-template-columns: 1fr !important; gap: 18px !important; }
+    }
+    .playground-left,
+    .playground-right,
+    .tab-pane,
+    .card-dashboard,
+    .terminal-window {
+      min-width: 0 !important;
+      max-width: 100% !important;
+      overflow: hidden;
     }
     .specs-table {
       width: 100%;
@@ -180,10 +191,10 @@ const html = `<!DOCTYPE html>
 <body>
   <div class="app-shell">
     <!-- Sidebar Oficial do Ecossistema Ponte / OZPro -->
-    <aside class="sidebar" aria-label="Navegação principal">
+    <aside class="sidebar" aria-label="NavegaÃ§Ã£o principal">
       <a class="brand" href="#decodificador" aria-label="Ponte API, PixValidator Pro">
         <img src="brand/ozpro-mark.svg" alt="Ponte API Logo" style="width:38px;height:38px;border-radius:10px;object-fit:contain;background:var(--mint);padding:4px;box-shadow:0 4px 12px rgba(163,230,53,0.35);" />
-        <span><strong>ponte</strong><small>PIXVALIDATOR · OZPRO</small></span>
+        <span><strong>ponte</strong><small>PIXVALIDATOR Â· OZPRO</small></span>
       </a>
 
       <nav class="primary-nav" id="primary-nav">
@@ -195,7 +206,7 @@ const html = `<!DOCTYPE html>
           <i data-lucide="sparkles"></i> <span>Gerador Pix Copia e Cola</span>
         </button>
         <button class="nav-link" data-view="docs">
-          <i data-lucide="book-open"></i> <span>Documentação REST</span>
+          <i data-lucide="book-open"></i> <span>DocumentaÃ§Ã£o REST</span>
         </button>
 
         <div class="nav-section-label">ECOSSISTEMA PONTE</div>
@@ -213,20 +224,20 @@ const html = `<!DOCTYPE html>
       <div class="sidebar-bottom">
         <div class="status-row">
           <span class="status-dot connected"></span>
-          <span>Cloudflare Edge · &lt;2ms</span>
+          <span>Cloudflare Edge Â· &lt;2ms</span>
         </div>
         <div class="profile-row">
           <div class="avatar lg">PX</div>
           <div class="profile-copy">
             <strong>PixValidator Pro</strong>
-            <span>Padrão Bacen EMVCo</span>
+            <span>PadrÃ£o Bacen EMVCo</span>
           </div>
         </div>
-        <div class="sidebar-version">v1.2.0 · CRC16 CCITT · ISO 18245</div>
+        <div class="sidebar-version">v1.2.0 Â· CRC16 CCITT Â· ISO 18245</div>
       </div>
     </aside>
 
-    <!-- Área Principal -->
+    <!-- Ãrea Principal -->
     <main class="main-area">
       <!-- Topbar Oficial -->
       <header class="topbar">
@@ -246,31 +257,31 @@ const html = `<!DOCTYPE html>
             <i data-lucide="moon"></i>
           </button>
           <a href="https://ponte-marketplace.maputo2.workers.dev" target="_blank" rel="noopener" class="primary-button accent" style="text-decoration:none;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;padding:0 16px;height:36px;">
-            <i data-lucide="sparkles"></i> <span>Catálogo Completo</span>
+            <i data-lucide="sparkles"></i> <span>CatÃ¡logo Completo</span>
           </a>
         </div>
       </header>
 
-      <!-- Conteúdo da Página -->
+      <!-- ConteÃºdo da PÃ¡gina -->
       <div class="content-wrap">
         <div class="page-heading">
           <div>
-            <p class="eyebrow">PAGAMENTOS INSTANTÂNEOS & PADRÃO EMVCO BACEN</p>
-            <h1>PixValidator Pro • Console Oficial Anycast</h1>
+            <p class="eyebrow">PAGAMENTOS INSTANTÃ‚NEOS & PADRÃƒO EMVCO BACEN</p>
+            <h1>PixValidator Pro â€¢ Console Oficial Anycast</h1>
             <p class="page-subtitle">
-              Decodificação, validação matemática de integridade (CRC16 CCITT) e geração de Pix Copia e Cola / QR Codes dinâmicos e estáticos em conformidade estrita com o Banco Central do Brasil.
+              DecodificaÃ§Ã£o, validaÃ§Ã£o matemÃ¡tica de integridade (CRC16 CCITT) e geraÃ§Ã£o de Pix Copia e Cola / QR Codes dinÃ¢micos e estÃ¡ticos em conformidade estrita com o Banco Central do Brasil.
             </p>
           </div>
         </div>
 
-        <!-- Cards de Métricas -->
+        <!-- Cards de MÃ©tricas -->
         <div class="billing-models-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom: 26px;">
           <div class="model-card credit-card" style="padding:18px 22px;">
             <div class="model-card-header" style="margin-bottom:10px;">
-              <span class="model-badge credit"><i data-lucide="shield-check"></i> PADRÃO BACEN</span>
+              <span class="model-badge credit"><i data-lucide="shield-check"></i> PADRÃƒO BACEN</span>
             </div>
             <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">EMVCo MPM</div>
-            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Conformidade total com a especificação técnica de Iniciação do Pix.</p>
+            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Conformidade total com a especificaÃ§Ã£o tÃ©cnica de IniciaÃ§Ã£o do Pix.</p>
           </div>
 
           <div class="model-card subscription-card" style="padding:18px 22px;">
@@ -278,15 +289,15 @@ const html = `<!DOCTYPE html>
               <span class="model-badge sub"><i data-lucide="hash"></i> CRC16 CCITT</span>
             </div>
             <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">Checagem de Tag 63</div>
-            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Auditoria do checksum polinomial para impedir erros de digitação e fraudes.</p>
+            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Auditoria do checksum polinomial para impedir erros de digitaÃ§Ã£o e fraudes.</p>
           </div>
 
           <div class="model-card tier-card" style="padding:18px 22px;">
             <div class="model-card-header" style="margin-bottom:10px;">
               <span class="model-badge tier"><i data-lucide="zap"></i> SUB-1MS NATIVO</span>
             </div>
-            <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">Geração Imediata</div>
-            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Geração de códigos de cobrança sem latência de rede na borda Anycast.</p>
+            <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">GeraÃ§Ã£o Imediata</div>
+            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">GeraÃ§Ã£o de cÃ³digos de cobranÃ§a sem latÃªncia de rede na borda Anycast.</p>
           </div>
         </div>
 
@@ -302,7 +313,7 @@ const html = `<!DOCTYPE html>
 
         <!-- Playground Split-Screen de 2 Colunas -->
         <div class="playground-split">
-          <!-- Coluna 1: Formulário e Painel Visual -->
+          <!-- Coluna 1: FormulÃ¡rio e Painel Visual -->
           <div class="playground-left">
             <!-- TAB 1: DECODIFICADOR -->
             <div id="section-decodificador" class="tab-pane">
@@ -310,17 +321,17 @@ const html = `<!DOCTYPE html>
                 <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
                   <span style="display:flex;align-items:center;gap:8px;">
                     <i data-lucide="search" style="color:var(--blue);"></i>
-                    <span>Decodificar e Auditar Código Pix</span>
+                    <span>Decodificar e Auditar CÃ³digo Pix</span>
                   </span>
                   <span class="status-badge-pill green">CRC16 Ativo</span>
                 </div>
                 <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.5;">
-                  Cole uma linha Pix Copia e Cola completa para inspecionar chave, beneficiário, valor e validade matemática:
+                  Cole uma linha Pix Copia e Cola completa para inspecionar chave, beneficiÃ¡rio, valor e validade matemÃ¡tica:
                 </p>
 
-                <!-- Input e Botão -->
+                <!-- Input e BotÃ£o -->
                 <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
-                  <textarea id="pix-input" placeholder="Cole o código Pix Copia e Cola (00020126...)..." rows="3" style="width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius-md);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink);background:var(--paper);outline:none;resize:vertical;">00020126580014br.gov.bcb.pix0136119876543215204000053039865406150.005802BR5913DEV STORE LAB6009SAO PAULO62070503***6304E8A2</textarea>
+                  <textarea id="pix-input" placeholder="Cole o cÃ³digo Pix Copia e Cola (00020126...)..." rows="3" style="width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius-md);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink);background:var(--paper);outline:none;resize:vertical;">00020126580014br.gov.bcb.pix0136119876543215204000053039865406150.005802BR5913DEV STORE LAB6009SAO PAULO62070503***6304E8A2</textarea>
                   <button id="btn-exec-decodificar" class="primary-button accent" style="width:100%;height:42px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:7px;">
                     <i data-lucide="play"></i> <span>Decodificar & Validar Integridade</span>
                   </button>
@@ -330,7 +341,7 @@ const html = `<!DOCTYPE html>
                 <div style="border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;background:var(--paper);margin-top:16px;">
                   <div style="padding:12px 16px;background:var(--paper-elevated,#f8fafc);border-bottom:1px solid var(--line);font-size:13px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:7px;">
                     <i data-lucide="clipboard-list"></i>
-                    <span>Raio-X da Transação Pix</span>
+                    <span>Raio-X da TransaÃ§Ã£o Pix</span>
                   </div>
                   <table class="specs-table">
                     <tbody>
@@ -347,7 +358,7 @@ const html = `<!DOCTYPE html>
                         <td class="val-col" id="val-valor" style="color:#10b981;font-size:15px;">R$ 150,00</td>
                       </tr>
                       <tr>
-                        <td class="label-col">Beneficiário (Nome)</td>
+                        <td class="label-col">BeneficiÃ¡rio (Nome)</td>
                         <td class="val-col" id="val-beneficiario">DEV STORE LAB</td>
                       </tr>
                       <tr>
@@ -356,11 +367,11 @@ const html = `<!DOCTYPE html>
                       </tr>
                       <tr>
                         <td class="label-col">TxID (Identificador)</td>
-                        <td class="val-col" id="val-txid" style="font-family:'JetBrains Mono',monospace;">*** (Não especificado)</td>
+                        <td class="val-col" id="val-txid" style="font-family:'JetBrains Mono',monospace;">*** (NÃ£o especificado)</td>
                       </tr>
                       <tr>
                         <td class="label-col">Integridade CRC16</td>
-                        <td class="val-col" id="val-crc16"><span class="status-badge-pill green">VÁLIDO (E8A2)</span></td>
+                        <td class="val-col" id="val-crc16"><span class="status-badge-pill green">VÃLIDO (E8A2)</span></td>
                       </tr>
                     </tbody>
                   </table>
@@ -374,12 +385,12 @@ const html = `<!DOCTYPE html>
                 <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
                   <span style="display:flex;align-items:center;gap:8px;">
                     <i data-lucide="sparkles" style="color:var(--blue);"></i>
-                    <span>Gerar Código Pix Copia e Cola Homologado</span>
+                    <span>Gerar CÃ³digo Pix Copia e Cola Homologado</span>
                   </span>
-                  <span class="status-badge-pill green">Bacen Estático</span>
+                  <span class="status-badge-pill green">Bacen EstÃ¡tico</span>
                 </div>
                 <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.5;">
-                  Preencha os dados da cobrança para gerar a linha oficial com CRC16 calculado:
+                  Preencha os dados da cobranÃ§a para gerar a linha oficial com CRC16 calculado:
                 </p>
 
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
@@ -392,11 +403,11 @@ const html = `<!DOCTYPE html>
                     <input type="number" step="0.01" id="gen-valor" value="89.90" style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-sm);font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);background:var(--paper);outline:none;" />
                   </div>
                   <div>
-                    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">Nome do Beneficiário</label>
+                    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">Nome do BeneficiÃ¡rio</label>
                     <input type="text" id="gen-nome" value="MINHA EMPRESA LTDA" maxlength="25" style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:13px;color:var(--ink);background:var(--paper);outline:none;" />
                   </div>
                   <div>
-                    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">Cidade do Beneficiário</label>
+                    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">Cidade do BeneficiÃ¡rio</label>
                     <input type="text" id="gen-cidade" value="SAO PAULO" maxlength="15" style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:13px;color:var(--ink);background:var(--paper);outline:none;" />
                   </div>
                 </div>
@@ -428,7 +439,7 @@ const html = `<!DOCTYPE html>
                 </button>
               </div>
 
-              <!-- Caixa de Código do Snippet -->
+              <!-- Caixa de CÃ³digo do Snippet -->
               <div class="snippet-code-box" style="padding:14px 18px;background:rgba(0,0,0,0.30);border-bottom:1px solid rgba(255,255,255,0.06);">
                 <pre class="snippet-pre" style="margin:0;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7dd3fc;line-height:1.5;overflow-x:auto;"><code id="snippet-code">curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/decode" \
   -H "Authorization: ******" \
@@ -437,7 +448,7 @@ const html = `<!DOCTYPE html>
   -d '{"payload":"0002012658..."}'</code></pre>
               </div>
 
-              <!-- Barra de Execução Sandbox -->
+              <!-- Barra de ExecuÃ§Ã£o Sandbox -->
               <div class="playground-bar">
                 <span class="method-tag post">POST</span>
                 <code class="endpoint-code" id="endpoint-display" style="font-size:12px;">/api/pix/decode</code>
@@ -450,7 +461,7 @@ const html = `<!DOCTYPE html>
               <div class="playground-console" style="min-height:300px;max-height:540px;overflow-y:auto;padding:16px;">
                 <div class="console-response-header" id="console-header" style="font-size:11.5px;margin-bottom:10px;">
                   <span class="badge-200" id="console-status">200 OK</span>
-                  <span id="console-latency">Latência: 1.1ms</span>
+                  <span id="console-latency">LatÃªncia: 1.1ms</span>
                   <span>Cloudflare Anycast</span>
                 </div>
                 <pre class="console-json" id="console-output" style="margin:0;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#f8fafc;line-height:1.5;"></pre>
@@ -462,7 +473,7 @@ const html = `<!DOCTYPE html>
     </main>
   </div>
 
-  <!-- Script da Aplicação e Integração -->
+  <!-- Script da AplicaÃ§Ã£o e IntegraÃ§Ã£o -->
   <script type="module">
     import { PixValidatorPro } from './pixvalidator-pro.js';
 
@@ -482,7 +493,7 @@ const html = `<!DOCTYPE html>
       if (window.lucide) window.lucide.createIcons();
     }
 
-    // Navegação de Abas
+    // NavegaÃ§Ã£o de Abas
     const tabBtns = document.querySelectorAll('.tab-nav-btn, .primary-nav .nav-link[data-view]');
     tabBtns.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -498,7 +509,7 @@ const html = `<!DOCTYPE html>
         const titles = {
           decodificador: 'Decodificador EMVCo',
           gerador: 'Gerador Pix Copia e Cola',
-          docs: 'Documentação REST'
+          docs: 'DocumentaÃ§Ã£o REST'
         };
         if (bread && titles[tabKey]) bread.textContent = titles[tabKey];
         updateSnippet();
@@ -564,7 +575,7 @@ const html = `<!DOCTYPE html>
       navigator.clipboard.writeText(txt).then(() => alert('Snippet copiado com sucesso!'));
     });
 
-    // ── LÓGICA DE DECODIFICAÇÃO ──
+    // â”€â”€ LÃ“GICA DE DECODIFICAÃ‡ÃƒO â”€â”€
     async function executarDecodificacao() {
       const raw = document.getElementById('pix-input').value.trim();
       updateSnippet();
@@ -581,20 +592,20 @@ const html = `<!DOCTYPE html>
 
         consoleStatus.textContent = decoded.valido ? '200 OK' : '400 ALERTA';
         consoleStatus.className = decoded.valido ? 'badge-200' : 'badge-500';
-        consoleLat.textContent = \`Latência: \${lat}ms\`;
+        consoleLat.textContent = \`LatÃªncia: \${lat}ms\`;
         consoleOutput.textContent = JSON.stringify(decoded, null, 2);
 
         if (decoded.valido) {
           document.getElementById('val-chave').textContent = decoded.chave || '-';
           document.getElementById('val-tipo-chave').innerHTML = \`<span class="status-badge-pill blue">\${decoded.tipoChave || 'N/A'}</span>\`;
-          document.getElementById('val-valor').textContent = decoded.valor ? \`R$ \${Number(decoded.valor).toFixed(2).replace('.', ',')}\` : 'Não definido (Livre)';
+          document.getElementById('val-valor').textContent = decoded.valor ? \`R$ \${Number(decoded.valor).toFixed(2).replace('.', ',')}\` : 'NÃ£o definido (Livre)';
           document.getElementById('val-beneficiario').textContent = decoded.beneficiario || decoded.nomeRecebedor || '-';
           document.getElementById('val-cidade').textContent = decoded.cidade || '-';
           document.getElementById('val-txid').textContent = decoded.txid || '***';
-          document.getElementById('val-crc16').innerHTML = '<span class="status-badge-pill green">VÁLIDO (Tag 63 Íntegra)</span>';
+          document.getElementById('val-crc16').innerHTML = '<span class="status-badge-pill green">VÃLIDO (Tag 63 Ãntegra)</span>';
         } else {
           document.getElementById('val-chave').textContent = '-';
-          document.getElementById('val-tipo-chave').innerHTML = '<span class="status-badge-pill red">Inválido</span>';
+          document.getElementById('val-tipo-chave').innerHTML = '<span class="status-badge-pill red">InvÃ¡lido</span>';
           document.getElementById('val-valor').textContent = 'R$ 0,00';
           document.getElementById('val-beneficiario').textContent = '-';
           document.getElementById('val-cidade').textContent = '-';
@@ -608,7 +619,7 @@ const html = `<!DOCTYPE html>
 
     document.getElementById('btn-exec-decodificar').addEventListener('click', executarDecodificacao);
 
-    // ── LÓGICA DE GERAÇÃO DE PIX ──
+    // â”€â”€ LÃ“GICA DE GERAÃ‡ÃƒO DE PIX â”€â”€
     document.getElementById('btn-exec-gerar-pix').addEventListener('click', () => {
       const ch = document.getElementById('gen-chave').value;
       const v = document.getElementById('gen-valor').value;
@@ -632,7 +643,7 @@ const html = `<!DOCTYPE html>
 
     document.getElementById('btn-run-sandbox').addEventListener('click', executarDecodificacao);
 
-    // Inicialização
+    // InicializaÃ§Ã£o
     renderLucide();
     setTimeout(() => {
       renderLucide();
@@ -645,3 +656,4 @@ const html = `<!DOCTYPE html>
 
 fs.writeFileSync('index.html', html, 'utf8');
 console.log('pixvalidator-pro index.html updated with marketplace design system!');
+
