@@ -1,822 +1,675 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PixValidator Pro — Validador EMVCo &amp; Decodificador Pix</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #0b0f19;
-      --card: #111827;
-      --card-inner: #0f172a;
-      --card-hover: #162032;
-      --mint: #a3e635;
-      --mint-glow: rgba(163, 230, 53, 0.28);
-      --primary: #a3e635;
-      --primary-glow: rgba(163, 230, 53, 0.25);
-      --accent: #38bdf8;
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --border: #1e293b;
-      --border-focus: rgba(163, 230, 53, 0.5);
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --code-bg: #030712;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background-color: var(--bg);
-      background-image: 
-        radial-gradient(1000px 500px at 50% -80px, rgba(163, 230, 53, 0.08) 0%, transparent 60%),
-        radial-gradient(800px 400px at 100% 50%, rgba(56, 189, 248, 0.04) 0%, transparent 50%);
-      color: var(--text);
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      line-height: 1.6;
-      padding: 0 20px;
-    }
-    .container {
-      max-width: 1160px;
-      margin: 0 auto;
-      padding: 40px 0 80px;
-    }
-    header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-    .badge-top {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      background: rgba(163, 230, 53, 0.12);
-      border: 1px solid rgba(163, 230, 53, 0.3);
-      border-radius: 9999px;
-      color: var(--mint);
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-    .badge-pulse {
-      width: 8px;
-      height: 8px;
-      background: var(--mint);
-      border-radius: 50%;
-      box-shadow: 0 0 10px var(--mint);
-      animation: pulse 2s infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.3); }
-    }
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 12px;
-      background: linear-gradient(135deg, #ffffff 40%, var(--mint) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    .subtitle {
-      color: var(--text-muted);
-      font-size: 1.05rem;
-      max-width: 720px;
-      margin: 0 auto;
-    }
-    .tabs {
-      display: flex;
-      gap: 10px;
-      background: var(--card);
-      padding: 6px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      margin-bottom: 30px;
-    }
-    .tab-btn {
-      flex: 1;
-      padding: 12px 18px;
-      background: transparent;
-      border: none;
-      border-radius: 8px;
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-    .tab-btn:hover {
-      color: var(--text);
-      background: rgba(255, 255, 255, 0.03);
-    }
-    .tab-btn.active {
-      background: var(--mint);
-      color: #0c1715;
-      font-weight: 800;
-      box-shadow: 0 4px 14px var(--mint-glow);
-    }
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px;
-      margin-bottom: 24px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-    .card-title {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .card-desc {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      margin-bottom: 20px;
-    }
-    .input-group {
-      margin-bottom: 20px;
-    }
-    label {
-      display: block;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-    textarea, input, select {
-      width: 100%;
-      background: var(--card-inner);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px 16px;
-      color: var(--text);
-      font-size: 0.95rem;
-      font-family: inherit;
-      outline: none;
-      transition: all 0.2s ease;
-    }
-    textarea {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      resize: vertical;
-      min-height: 110px;
-    }
-    textarea:focus, input:focus, select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px var(--primary-glow);
-    }
-    .btn-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 12px 24px;
-      background: var(--primary);
-      color: #022c22;
-      border: none;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 20px var(--primary-glow);
-    }
-    .btn-secondary {
-      background: var(--card-inner);
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-    .btn-secondary:hover {
-      background: var(--card-hover);
-      color: #fff;
-      box-shadow: none;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-    }
-    .grid-4 {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      margin-top: 24px;
-    }
-    .stat-box {
-      background: var(--card-inner);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px 20px;
-    }
-    .stat-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-    .stat-val {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #fff;
-      word-break: break-all;
-    }
-    .stat-val.mono {
-      font-family: 'JetBrains Mono', monospace;
-    }
-    .tag-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 700;
-    }
-    .tag-success {
-      background: rgba(16, 185, 129, 0.15);
-      color: var(--primary);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-    .tag-danger {
-      background: rgba(239, 68, 68, 0.15);
-      color: var(--danger);
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-    pre {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 16px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      overflow-x: auto;
-      color: #cbd5e1;
-      margin-top: 16px;
-    }
-    .api-badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      background: #1e293b;
-      padding: 3px 8px;
-      border-radius: 4px;
-      color: var(--accent);
-    }
-    @media (max-width: 768px) {
-      .grid-2 { grid-template-columns: 1fr; }
-      .tabs { flex-direction: column; }
-    }
-
-    :root {
-      --bg: var(--canvas, #060913);
-      --card: var(--paper, #0d1527);
-      --card-inner: var(--paper-elevated, #131f38);
-      --card-hover: var(--line-hover, #192847);
-      --border: var(--line, rgba(255, 255, 255, 0.08));
-      --text: var(--ink, #f8fafc);
-      --text-muted: var(--muted, #94a3b8);
-      --primary: var(--mint, #a3e635);
-      --primary-glow: rgba(163, 230, 53, 0.28);
-    }
-    body {
-      background-color: var(--canvas) !important;
-      color: var(--ink) !important;
-      padding: 0 !important;
-    }
-    .badge-top {
-      background: rgba(163, 230, 53, 0.12) !important;
-      border: 1px solid rgba(163, 230, 53, 0.35) !important;
-      color: var(--mint, #a3e635) !important;
-    }
-    .badge-pulse {
-      background: var(--mint, #a3e635) !important;
-      box-shadow: 0 0 10px var(--mint, #a3e635) !important;
-    }
-    .tab-btn.active {
-      background: var(--paper-elevated, #131f38) !important;
-      border-color: var(--mint, #a3e635) !important;
-      color: var(--mint, #a3e635) !important;
-    }
-    .btn {
-      background: var(--mint, #a3e635) !important;
-      color: #0c1715 !important;
-      font-weight: 700 !important;
-      box-shadow: 0 2px 10px rgba(163, 230, 53, 0.25) !important;
-    }
-    .btn:hover {
-      background: var(--mint-light, #d9f99d) !important;
-      box-shadow: 0 4px 14px rgba(163, 230, 53, 0.35) !important;
-    }
-    .btn-secondary {
-      background: var(--paper-elevated, #131f38) !important;
-      color: var(--ink, #f8fafc) !important;
-      border: 1px solid var(--line, rgba(255, 255, 255, 0.08)) !important;
-      box-shadow: none !important;
-    }
-    .btn-secondary:hover {
-      background: var(--line-hover, #192847) !important;
-      color: var(--mint, #a3e635) !important;
-    }
-  </style>
-  <link rel="stylesheet" href="ponte-suite.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PixValidator Pro • Validador EMVCo & Gerador Pix Anycast • Ponte API Market</title>
+  <meta name="description" content="Validador e Decodificador Oficial de Pix Copia e Cola e QR Code EMVCo (Banco Central do Brasil) com verificação de integridade CRC16 CCITT na Cloudflare Edge." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=3.2.0" />
   <script>
     (function() {
       const savedTheme = localStorage.getItem('ponte.theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', savedTheme);
     })();
-
-    // Inicialização do Alternador de Tema Ponte API
-    const themeBtn = document.getElementById('theme-toggle-btn');
-    if (themeBtn) {
-      const updateThemeIcon = () => {
-        themeBtn.textContent = document.documentElement.getAttribute('data-theme') === 'light' ? '☀️' : '🌙';
-      };
-      themeBtn.addEventListener('click', () => {
-        const cur = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-        document.documentElement.setAttribute('data-theme', cur);
-        localStorage.setItem('ponte.theme', cur);
-        updateThemeIcon();
-      });
-      updateThemeIcon();
-    }
   </script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    svg.lucide, .lucide {
+      width: 18px !important;
+      height: 18px !important;
+      stroke-width: 2 !important;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .nav-link svg, .nav-link .lucide {
+      width: 18px !important;
+      height: 18px !important;
+    }
+    .brand-mark svg {
+      width: 22px !important;
+      height: 22px !important;
+    }
+    .playground-split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+      gap: 26px;
+      margin-top: 24px;
+    }
+    @media (max-width: 1100px) {
+      .playground-split { grid-template-columns: 1fr; }
+    }
+    .specs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+    .specs-table tr {
+      border-bottom: 1px solid var(--line-light);
+    }
+    .specs-table td {
+      padding: 12px 16px;
+      vertical-align: middle;
+    }
+    .specs-table td.label-col {
+      color: var(--muted);
+      font-weight: 600;
+      width: 40%;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .specs-table td.val-col {
+      color: var(--ink);
+      font-weight: 700;
+      text-align: right;
+    }
+    .tab-nav-bar {
+      display: flex;
+      gap: 8px;
+      background: var(--paper-elevated, #f1f5f2);
+      padding: 6px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--line);
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+    :root[data-theme="dark"] .tab-nav-bar {
+      background: #0d1527;
+      border-color: #1e293b;
+    }
+    .tab-nav-btn {
+      flex: 1;
+      min-height: 40px;
+      padding: 0 18px;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      white-space: nowrap;
+      transition: all 0.16s ease;
+    }
+    .tab-nav-btn:hover {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .tab-nav-btn.is-active {
+      background: var(--paper);
+      color: var(--ink);
+      font-weight: 800;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    :root[data-theme="dark"] .tab-nav-btn.is-active {
+      background: #1e293b;
+      color: #fff;
+    }
+    .status-badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 11px;
+      border-radius: var(--radius-full);
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .status-badge-pill.green {
+      background: rgba(16, 185, 129, 0.12);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-badge-pill.red {
+      background: rgba(239, 68, 68, 0.12);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .status-badge-pill.blue {
+      background: rgba(59, 130, 246, 0.12);
+      color: #3b82f6;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+    .terminal-window {
+      background: #091311;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      box-shadow: var(--shadow-xl);
+      display: flex;
+      flex-direction: column;
+    }
+    .terminal-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .terminal-dots {
+      display: flex;
+      gap: 7px;
+    }
+    .terminal-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 50%;
+    }
+    .terminal-dot.red { background: #ef4444; }
+    .terminal-dot.yellow { background: #f59e0b; }
+    .terminal-dot.green { background: #10b981; }
+    .card-dashboard {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-xl);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+  </style>
 </head>
 <body>
-
   <div class="app-shell">
-    <!-- SIDEBAR UNIFICADA PONTE SUITE -->
-    <aside class="sidebar">
-      <a class="brand" href="https://ponte-marketplace.maputo2.workers.dev/#catalogo">
-        <div class="brand-mark">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-        </div>
-        <div class="brand-copy">
-          <strong>ponte</strong>
-          <small>API MARKET ? OZPRO</small>
-        </div>
+    <!-- Sidebar Oficial do Ecossistema Ponte / OZPro -->
+    <aside class="sidebar" aria-label="Navegação principal">
+      <a class="brand" href="#decodificador" aria-label="Ponte API, PixValidator Pro">
+        <img src="brand/ozpro-mark.svg" alt="Ponte API Logo" style="width:38px;height:38px;border-radius:10px;object-fit:contain;background:var(--mint);padding:4px;box-shadow:0 4px 12px rgba(163,230,53,0.35);" />
+        <span><strong>ponte</strong><small>PIXVALIDATOR · OZPRO</small></span>
       </a>
 
-      <div class="nav-section-label">Financeiro & Pagamentos</div>
-      <nav class="primary-nav">
-        <a class="nav-link" href="https://clepta2.github.io/boletovalidator-pro/">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 7h10M7 12h10M7 17h6"/></svg>
-          <span>BoletoValidator Pro</span>
-        </a>
-        <a class="nav-link is-active" href="#">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect width="8" height="8" x="3" y="3" rx="1"/><rect width="8" height="8" x="13" y="3" rx="1"/><rect width="8" height="8" x="3" y="13" rx="1"/><path d="M13 13h4v4h-4z"/></svg>
-          <span>Pix Gateway Pro</span>
-        </a>
-      </nav>
+      <nav class="primary-nav" id="primary-nav">
+        <div class="nav-section-label">FUNCIONALIDADES</div>
+        <button class="nav-link is-active" data-view="decodificador">
+          <i data-lucide="qr-code"></i> <span>Decodificador EMVCo</span>
+        </button>
+        <button class="nav-link" data-view="gerador">
+          <i data-lucide="sparkles"></i> <span>Gerador Pix Copia e Cola</span>
+        </button>
+        <button class="nav-link" data-view="docs">
+          <i data-lucide="book-open"></i> <span>Documentação REST</span>
+        </button>
 
-      <div class="nav-section-label">Valida??o & Seguran?a</div>
-      <nav class="primary-nav">
-        <a class="nav-link" href="https://clepta2.github.io/antifraude-pro/">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          <span>AntiFraude Pro</span>
+        <div class="nav-section-label">ECOSSISTEMA PONTE</div>
+        <a class="nav-link" href="https://ponte-marketplace.maputo2.workers.dev" target="_blank" rel="noopener">
+          <i data-lucide="layout-grid"></i> <span>API Marketplace</span>
+          <span class="nav-ext"><i data-lucide="arrow-up-right"></i></span>
         </a>
-        <a class="nav-link" href="https://clepta2.github.io/passvalidator-pro/">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          <span>PassValidator HIBP</span>
-        </a>
-        <a class="nav-link" href="https://clientinspector-pro-api.clepta2.workers.dev/api/meu-ip">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>
-          <span>ClientInspector Forense</span>
-        </a>
-      </nav>
-
-      <div class="nav-section-label">Design & Assets</div>
-      <nav class="primary-nav">
-        <a class="nav-link" href="https://icons-pro-api.maputo2.workers.dev/">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="m4.93 4.93 4.24 4.24"/><path d="m14.83 9.17 4.24-4.24"/><path d="m14.83 14.83 4.24 4.24"/><path d="m9.17 14.83-4.24 4.24"/></svg>
-          <span>?cones & Logos (3.470+)</span>
-        </a>
-        <a class="nav-link" href="https://graficos-pro-api.maputo2.workers.dev/">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
-          <span>Gr?ficos Pro (39 Tipos)</span>
+        <a class="nav-link" href="https://github.com/clepta2/pixvalidator-pro" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block;vertical-align:middle;"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+          <span>GitHub do Projeto</span>
+          <span class="nav-ext"><i data-lucide="arrow-up-right"></i></span>
         </a>
       </nav>
 
       <div class="sidebar-bottom">
         <div class="status-row">
-          <span class="status-dot"></span>
-          <span>Borda Cloudflare Anycast</span>
+          <span class="status-dot connected"></span>
+          <span>Cloudflare Edge · &lt;2ms</span>
         </div>
+        <div class="profile-row">
+          <div class="avatar lg">PX</div>
+          <div class="profile-copy">
+            <strong>PixValidator Pro</strong>
+            <span>Padrão Bacen EMVCo</span>
+          </div>
+        </div>
+        <div class="sidebar-version">v1.2.0 · CRC16 CCITT · ISO 18245</div>
       </div>
     </aside>
 
-    <!-- ?REA PRINCIPAL -->
-    <div class="main-area">
-      <!-- TOPBAR -->
+    <!-- Área Principal -->
+    <main class="main-area">
+      <!-- Topbar Oficial -->
       <header class="topbar">
         <div class="breadcrumb">
-          <a href="https://ponte-marketplace.maputo2.workers.dev/#catalogo">Workspace</a>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-          <a href="https://ponte-marketplace.maputo2.workers.dev/#catalogo">Financeiro & Pagamentos</a>
-          <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
-          <strong>Pix Gateway Pro</strong>
+          <span>Workspace</span>
+          <i data-lucide="chevron-right"></i>
+          <span>Financeiro & Pagamentos</span>
+          <i data-lucide="chevron-right"></i>
+          <strong id="breadcrumb-title">Decodificador EMVCo</strong>
         </div>
-
         <div class="topbar-actions">
-          <a href="https://ponte-marketplace.maputo2.workers.dev/#catalogo" class="btn btn-secondary btn-sm" style="text-decoration:none;">Marketplace ?</a>
-          <button class="theme-toggle-btn" id="theme-toggle-btn" title="Alternar tema">??</button>
+          <span class="environment">
+            <span class="status-dot connected"></span>
+            Cloudflare Anycast Global (330+ Cidades)
+          </span>
+          <button class="icon-button theme-toggle-btn" id="theme-toggle-btn" aria-label="Alternar tema" title="Alternar tema claro/escuro">
+            <i data-lucide="moon"></i>
+          </button>
+          <a href="https://ponte-marketplace.maputo2.workers.dev" target="_blank" rel="noopener" class="primary-button accent" style="text-decoration:none;display:inline-flex;align-items:center;gap:7px;font-size:12.5px;padding:0 16px;height:36px;">
+            <i data-lucide="sparkles"></i> <span>Catálogo Completo</span>
+          </a>
         </div>
       </header>
 
-      <!-- GUIA DID?TICO: O QUE EST? ACONTECENDO & O QUE FAZER -->
-      <div class="guide-card" style="margin-bottom: 24px;">
-        <div class="guide-header">
-          <strong>?? Como utilizar e o que esta ferramenta analisa?</strong>
-          <span class="badge green">Padr?o Bacen EMVCo &lt;1ms</span>
-        </div>
-        <div class="guide-steps">
-          <div class="guide-step">
-            <span class="guide-step-tag">Passo 1: Enviar C?digo ou Gerar</span>
-            <p>Cole o c?digo Pix Copia e Cola (ou QR Code) para decodificar, ou utilize a aba "Gerador" para criar cobran?as din?micas ou est?ticas.</p>
-          </div>
-          <div class="guide-step">
-            <span class="guide-step-tag">Passo 2: Per?cia Matem?tica</span>
-            <p>A API valida o cabe?alho <code>000201</code>, calcula o checksum <strong>CRC16-CCITT</strong> e extrai o recebedor oficial, chave e valor.</p>
-          </div>
-          <div class="guide-step">
-            <span class="guide-step-tag">Passo 3: Integra??o Direta</span>
-            <p>Copie o c?digo Copia e Cola validado, salve o QR Code gerado ou use a chamada de API pronta para seu sistema ou bot.</p>
-          </div>
-        </div>
-      </div>
-
-
+      <!-- Conteúdo da Página -->
       <div class="content-wrap">
-
-    <header>
-      <div class="badge-top">
-        <span class="badge-pulse"></span>
-        Banco Central do Brasil • Padrão EMVCo MPM • Sub-1ms Edge
-      </div>
-      <h1>PixValidator Pro</h1>
-      <p class="subtitle">Decodificador instantâneo, Validador de Integridade (CRC16-CCITT) e Gerador Oficial de Pix Copia e Cola / QR Code para E-commerce, PDVs e Agentes de IA.</p>
-    </header>
-
-    <div class="tabs">
-      <button class="tab-btn active" onclick="switchTab('tab-decodificar')">🔍 Decodificar &amp; Validar</button>
-      <button class="tab-btn" onclick="switchTab('tab-gerar')">⚡ Gerador Pix Copia e Cola</button>
-      <button class="tab-btn" onclick="switchTab('tab-chave')">🔑 Validador de Chave</button>
-      <button class="tab-btn" onclick="switchTab('tab-api')">📚 API &amp; Integração</button>
-    </div>
-
-    <!-- TAB 1: DECODIFICAR & VALIDAR -->
-    <div id="tab-decodificar" class="tab-content active">
-      <div class="card">
-        <h2 class="card-title">Análise de Código Pix Copia e Cola</h2>
-        <p class="card-desc">Cole uma string Pix completa ou mensagem contendo Pix para inspecionar campos EMVCo, chave, recebedor, valor e autenticidade do CRC16.</p>
-        
-        <div class="input-group">
-          <label for="input-pix">Código Pix Copia e Cola / QR Code</label>
-          <textarea id="input-pix" placeholder="00020126...6304..."></textarea>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn" onclick="analisarPix()">🚀 Analisar Código Pix</button>
-          <button class="btn btn-secondary" onclick="carregarExemplo('estatico')">Exemplo Estático</button>
-          <button class="btn btn-secondary" onclick="carregarExemplo('dinamico')">Exemplo Dinâmico</button>
-          <button class="btn btn-secondary" onclick="carregarExemplo('fraude')">Simular Adulteração/Fraude</button>
-        </div>
-      </div>
-
-      <div id="resultado-decodificacao" style="display: none;">
-        <div class="card">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h3 style="font-size: 1.2rem;">Resultado da Auditoria EMVCo</h3>
-            <span id="badge-status-pix" class="tag-status"></span>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">PAGAMENTOS INSTANTÂNEOS & PADRÃO EMVCO BACEN</p>
+            <h1>PixValidator Pro • Console Oficial Anycast</h1>
+            <p class="page-subtitle">
+              Decodificação, validação matemática de integridade (CRC16 CCITT) e geração de Pix Copia e Cola / QR Codes dinâmicos e estáticos em conformidade estrita com o Banco Central do Brasil.
+            </p>
           </div>
+        </div>
 
-          <div class="grid-4">
-            <div class="stat-box">
-              <div class="stat-label">Valor da Transação</div>
-              <div id="res-valor" class="stat-val" style="color: var(--primary);">--</div>
+        <!-- Cards de Métricas -->
+        <div class="billing-models-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-bottom: 26px;">
+          <div class="model-card credit-card" style="padding:18px 22px;">
+            <div class="model-card-header" style="margin-bottom:10px;">
+              <span class="model-badge credit"><i data-lucide="shield-check"></i> PADRÃO BACEN</span>
             </div>
-            <div class="stat-box">
-              <div class="stat-label">Chave Pix</div>
-              <div id="res-chave" class="stat-val mono">--</div>
-              <div id="res-tipo-chave" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">--</div>
+            <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">EMVCo MPM</div>
+            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Conformidade total com a especificação técnica de Iniciação do Pix.</p>
+          </div>
+
+          <div class="model-card subscription-card" style="padding:18px 22px;">
+            <div class="model-card-header" style="margin-bottom:10px;">
+              <span class="model-badge sub"><i data-lucide="hash"></i> CRC16 CCITT</span>
             </div>
-            <div class="stat-box">
-              <div class="stat-label">Beneficiário</div>
-              <div id="res-beneficiario" class="stat-val">--</div>
-              <div id="res-cidade" style="font-size: 0.8rem; color: var(--text-muted); margin-top: 4px;">--</div>
+            <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">Checagem de Tag 63</div>
+            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Auditoria do checksum polinomial para impedir erros de digitação e fraudes.</p>
+          </div>
+
+          <div class="model-card tier-card" style="padding:18px 22px;">
+            <div class="model-card-header" style="margin-bottom:10px;">
+              <span class="model-badge tier"><i data-lucide="zap"></i> SUB-1MS NATIVO</span>
             </div>
-            <div class="stat-box">
-              <div class="stat-label">Identificador (TXID)</div>
-              <div id="res-txid" class="stat-val mono">--</div>
+            <div style="font-size:20px;font-weight:800;color:var(--ink);margin-bottom:4px;">Geração Imediata</div>
+            <p style="font-size:12.5px;color:var(--muted);margin:0;line-height:1.45;">Geração de códigos de cobrança sem latência de rede na borda Anycast.</p>
+          </div>
+        </div>
+
+        <!-- Abas -->
+        <div class="tab-nav-bar">
+          <button class="tab-nav-btn is-active" data-tab="decodificador">
+            <i data-lucide="qr-code"></i> <span>Decodificador de Pix Copia e Cola</span>
+          </button>
+          <button class="tab-nav-btn" data-tab="gerador">
+            <i data-lucide="sparkles"></i> <span>Gerador de Pix Copia e Cola</span>
+          </button>
+        </div>
+
+        <!-- Playground Split-Screen de 2 Colunas -->
+        <div class="playground-split">
+          <!-- Coluna 1: Formulário e Painel Visual -->
+          <div class="playground-left">
+            <!-- TAB 1: DECODIFICADOR -->
+            <div id="section-decodificador" class="tab-pane">
+              <div class="card-dashboard">
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+                  <span style="display:flex;align-items:center;gap:8px;">
+                    <i data-lucide="search" style="color:var(--blue);"></i>
+                    <span>Decodificar e Auditar Código Pix</span>
+                  </span>
+                  <span class="status-badge-pill green">CRC16 Ativo</span>
+                </div>
+                <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.5;">
+                  Cole uma linha Pix Copia e Cola completa para inspecionar chave, beneficiário, valor e validade matemática:
+                </p>
+
+                <!-- Input e Botão -->
+                <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;">
+                  <textarea id="pix-input" placeholder="Cole o código Pix Copia e Cola (00020126...)..." rows="3" style="width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius-md);font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink);background:var(--paper);outline:none;resize:vertical;">00020126580014br.gov.bcb.pix0136119876543215204000053039865406150.005802BR5913DEV STORE LAB6009SAO PAULO62070503***6304E8A2</textarea>
+                  <button id="btn-exec-decodificar" class="primary-button accent" style="width:100%;height:42px;font-size:13px;font-weight:700;display:inline-flex;align-items:center;justify-content:center;gap:7px;">
+                    <i data-lucide="play"></i> <span>Decodificar & Validar Integridade</span>
+                  </button>
+                </div>
+
+                <!-- Tabela de Raio-X do Pix -->
+                <div style="border:1px solid var(--line);border-radius:var(--radius-lg);overflow:hidden;background:var(--paper);margin-top:16px;">
+                  <div style="padding:12px 16px;background:var(--paper-elevated,#f8fafc);border-bottom:1px solid var(--line);font-size:13px;font-weight:700;color:var(--ink);display:flex;align-items:center;gap:7px;">
+                    <i data-lucide="clipboard-list"></i>
+                    <span>Raio-X da Transação Pix</span>
+                  </div>
+                  <table class="specs-table">
+                    <tbody>
+                      <tr>
+                        <td class="label-col">Chave Pix</td>
+                        <td class="val-col" id="val-chave" style="font-family:'JetBrains Mono',monospace;">11987654321</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Tipo de Chave</td>
+                        <td class="val-col" id="val-tipo-chave"><span class="status-badge-pill blue">TELEFONE</span></td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Valor Cobrado</td>
+                        <td class="val-col" id="val-valor" style="color:#10b981;font-size:15px;">R$ 150,00</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Beneficiário (Nome)</td>
+                        <td class="val-col" id="val-beneficiario">DEV STORE LAB</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Cidade</td>
+                        <td class="val-col" id="val-cidade">SAO PAULO</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">TxID (Identificador)</td>
+                        <td class="val-col" id="val-txid" style="font-family:'JetBrains Mono',monospace;">*** (Não especificado)</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Integridade CRC16</td>
+                        <td class="val-col" id="val-crc16"><span class="status-badge-pill green">VÁLIDO (E8A2)</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 2: GERADOR -->
+            <div id="section-gerador" class="tab-pane" style="display:none;">
+              <div class="card-dashboard">
+                <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+                  <span style="display:flex;align-items:center;gap:8px;">
+                    <i data-lucide="sparkles" style="color:var(--blue);"></i>
+                    <span>Gerar Código Pix Copia e Cola Homologado</span>
+                  </span>
+                  <span class="status-badge-pill green">Bacen Estático</span>
+                </div>
+                <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.5;">
+                  Preencha os dados da cobrança para gerar a linha oficial com CRC16 calculado:
+                </p>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px;">
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">Chave Pix</label>
+                    <input type="text" id="gen-chave" value="contato@minhaempresa.com.br" style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-sm);font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);background:var(--paper);outline:none;" />
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">Valor (R$ - Opcional)</label>
+                    <input type="number" step="0.01" id="gen-valor" value="89.90" style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-sm);font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink);background:var(--paper);outline:none;" />
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">Nome do Beneficiário</label>
+                    <input type="text" id="gen-nome" value="MINHA EMPRESA LTDA" maxlength="25" style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:13px;color:var(--ink);background:var(--paper);outline:none;" />
+                  </div>
+                  <div>
+                    <label style="display:block;font-size:12px;font-weight:700;color:var(--muted);margin-bottom:6px;">Cidade do Beneficiário</label>
+                    <input type="text" id="gen-cidade" value="SAO PAULO" maxlength="15" style="width:100%;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:var(--radius-sm);font-size:13px;color:var(--ink);background:var(--paper);outline:none;" />
+                  </div>
+                </div>
+
+                <button id="btn-exec-gerar-pix" class="primary-button accent" style="width:100%;height:42px;font-size:13px;font-weight:700;">
+                  <i data-lucide="sparkles"></i> <span>Gerar Linha Pix Copia e Cola</span>
+                </button>
+              </div>
             </div>
           </div>
 
-          <div class="grid-2" style="margin-top: 20px;">
-            <div class="stat-box">
-              <div class="stat-label">Integridade do CRC16 (Tag 63)</div>
-              <div id="res-crc" class="stat-val mono" style="font-size: 1rem;">--</div>
-            </div>
-            <div class="stat-box">
-              <div class="stat-label">Tipo de Payload</div>
-              <div id="res-tipo-payload" class="stat-val" style="font-size: 1rem;">--</div>
+          <!-- Coluna 2: Terminal Console Dark Oficial da Ponte API -->
+          <div class="playground-right">
+            <div class="terminal-window">
+              <div class="terminal-topbar">
+                <div class="terminal-dots">
+                  <div class="terminal-dot red"></div>
+                  <div class="terminal-dot yellow"></div>
+                  <div class="terminal-dot green"></div>
+                </div>
+                <div class="snippet-lang-tabs" role="tablist">
+                  <button class="snippet-tab is-active" data-lang="curl">cURL</button>
+                  <button class="snippet-tab" data-lang="nodejs">Node.js</button>
+                  <button class="snippet-tab" data-lang="python">Python</button>
+                  <button class="snippet-tab" data-lang="php">PHP</button>
+                </div>
+                <button class="icon-button copy-mini" id="btn-copy-code" title="Copiar Snippet">
+                  <i data-lucide="copy" style="width:14px;height:14px;"></i>
+                </button>
+              </div>
+
+              <!-- Caixa de Código do Snippet -->
+              <div class="snippet-code-box" style="padding:14px 18px;background:rgba(0,0,0,0.30);border-bottom:1px solid rgba(255,255,255,0.06);">
+                <pre class="snippet-pre" style="margin:0;font-family:'JetBrains Mono',monospace;font-size:12px;color:#7dd3fc;line-height:1.5;overflow-x:auto;"><code id="snippet-code">curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/decode"   -H "Authorization: ******"   -H "x-api-key: pix_live_emv_2026"   -H "Content-Type: application/json"   -d '{"payload":"0002012658..."}'</code></pre>
+              </div>
+
+              <!-- Barra de Execução Sandbox -->
+              <div class="playground-bar">
+                <span class="method-tag post">POST</span>
+                <code class="endpoint-code" id="endpoint-display" style="font-size:12px;">/api/pix/decode</code>
+                <button class="primary-button accent test-btn" id="btn-run-sandbox" style="white-space:nowrap;padding:0 14px;height:32px;">
+                  <i data-lucide="play"></i> <span>Executar</span>
+                </button>
+              </div>
+
+              <!-- Console de Resposta JSON -->
+              <div class="playground-console" style="min-height:300px;max-height:540px;overflow-y:auto;padding:16px;">
+                <div class="console-response-header" id="console-header" style="font-size:11.5px;margin-bottom:10px;">
+                  <span class="badge-200" id="console-status">200 OK</span>
+                  <span id="console-latency">Latência: 1.1ms</span>
+                  <span>Cloudflare Anycast</span>
+                </div>
+                <pre class="console-json" id="console-output" style="margin:0;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#f8fafc;line-height:1.5;"></pre>
+              </div>
             </div>
           </div>
-
-          <pre id="res-json-view"></pre>
         </div>
       </div>
-    </div>
-
-    <!-- TAB 2: GERADOR PIX -->
-    <div id="tab-gerar" class="tab-content">
-      <div class="card">
-        <h2 class="card-title">Gerar Código Pix Copia e Cola Oficial</h2>
-        <p class="card-desc">Crie payloads Pix 100% compatíveis com todos os aplicativos bancários do Brasil com cálculo automático do CRC16 EMVCo.</p>
-        
-        <div class="grid-2">
-          <div class="input-group">
-            <label for="gen-chave">Chave Pix (CPF, CNPJ, Email, Tel ou EVP)</label>
-            <input type="text" id="gen-chave" placeholder="ex: contato@suaempresa.com.br ou 11999999999" value="contato@empresa.com.br">
-          </div>
-          <div class="input-group">
-            <label for="gen-nome">Nome do Beneficiário (Máx 25 chars)</label>
-            <input type="text" id="gen-nome" placeholder="ex: LOJA DO DESENVOLVEDOR" value="MINHA EMPRESA TECH">
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div class="input-group">
-            <label for="gen-cidade">Cidade do Beneficiário (Máx 15 chars)</label>
-            <input type="text" id="gen-cidade" placeholder="ex: SAO PAULO" value="SAO PAULO">
-          </div>
-          <div class="input-group">
-            <label for="gen-valor">Valor em R$ (Opcional - Deixe vazio para valor aberto)</label>
-            <input type="number" id="gen-valor" step="0.01" placeholder="ex: 89.90" value="49.90">
-          </div>
-        </div>
-
-        <div class="grid-2">
-          <div class="input-group">
-            <label for="gen-txid">Identificador da Cobrança / TXID (Máx 25 chars)</label>
-            <input type="text" id="gen-txid" placeholder="ex: PEDIDO123" value="PEDIDO9821">
-          </div>
-          <div class="input-group">
-            <label for="gen-info">Descrição / Mensagem para o Pagador (Opcional)</label>
-            <input type="text" id="gen-info" placeholder="ex: Assinatura Mensal Pro" value="Assinatura Mensal API Pro">
-          </div>
-        </div>
-
-        <div class="btn-row">
-          <button class="btn" onclick="gerarCodigoPix()">⚡ Gerar Pix Copia e Cola</button>
-        </div>
-      </div>
-
-      <div id="resultado-gerador" style="display: none;">
-        <div class="card">
-          <h3 style="font-size: 1.2rem; margin-bottom: 16px;">Código Gerado com Sucesso</h3>
-          <div class="input-group">
-            <label>Pix Copia e Cola (Pronto para o Checkout)</label>
-            <textarea id="gen-payload-output" readonly></textarea>
-          </div>
-          <div class="btn-row">
-            <button class="btn" onclick="copiarPixGerado()">📋 Copiar Código</button>
-            <button class="btn btn-secondary" onclick="testarPixGerado()">🔍 Testar no Decodificador</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 3: VALIDADOR DE CHAVE -->
-    <div id="tab-chave" class="tab-content">
-      <div class="card">
-        <h2 class="card-title">Auditoria e Validação de Chave Pix Isolada</h2>
-        <p class="card-desc">Valide CPFs e CNPJs por dígitos verificadores, telefones celulares E.164 (+55), e-mails RFC e chaves aleatórias UUID.</p>
-
-        <div class="input-group">
-          <label for="input-chave-teste">Digite a Chave Pix para Validação</label>
-          <input type="text" id="input-chave-teste" placeholder="Digite CPF, CNPJ, E-mail, Celular ou Chave Aleatória">
-        </div>
-
-        <div class="btn-row">
-          <button class="btn" onclick="validarChaveIsolada()">Auditar Chave</button>
-        </div>
-
-        <div id="res-chave-box" style="margin-top: 24px; display: none;">
-          <div class="stat-box">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <span id="badge-chave" class="tag-status"></span>
-              <span id="tipo-chave-detectada" class="api-badge"></span>
-            </div>
-            <div id="desc-chave-res" style="font-size: 0.95rem;"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- TAB 4: API & DOCUMENTAÇÃO -->
-    <div id="tab-api" class="tab-content">
-      <div class="card">
-        <h2 class="card-title">Endpoints de Alta Velocidade Cloudflare Edge</h2>
-        <p class="card-desc">Consuma a API em microssegundos direto da borda Anycast sem dependências externas.</p>
-
-        <h3 style="font-size: 1rem; margin: 20px 0 8px;">1. Decodificar e Validar Pix</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);"><code>POST /api/pix/decodificar</code> ou <code>GET /api/pix/decodificar?codigo=000201...</code></p>
-        <pre>curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/decodificar" \
-  -H "Content-Type: application/json" \
-  -d '{"codigo": "00020101021126670014br.gov.bcb.pix0117clepta2@gmail.com520400005303986540549.905802BR5911CLEPTA TECH6009SAO PAULO62140510PEDIDO982163045E7A"}'</pre>
-
-        <h3 style="font-size: 1rem; margin: 20px 0 8px;">2. Gerar Código Pix Copia e Cola Oficial</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);"><code>POST /api/pix/gerar</code> ou <code>GET /api/pix/gerar?chave=...&nome=...&valor=...</code></p>
-        <pre>curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/gerar" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "chave": "clepta2@gmail.com",
-    "nome": "MINHA EMPRESA",
-    "cidade": "SAO PAULO",
-    "valor": 120.00,
-    "txid": "PEDIDO9912"
-  }'</pre>
-
-        <h3 style="font-size: 1rem; margin: 20px 0 8px;">3. Validar Chave Pix Isolada</h3>
-        <p style="font-size: 0.85rem; color: var(--text-muted);"><code>GET /api/pix/chave?chave=52998224725</code></p>
-        <pre>curl -X GET "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/chave?chave=+5511987654321"</pre>
-      </div>
-    </div>
+    </main>
   </div>
 
+  <!-- Script da Aplicação e Integração -->
   <script type="module">
     import { PixValidatorPro } from './pixvalidator-pro.js';
-    window.PixValidatorPro = PixValidatorPro;
-  </script>
 
-  <script>
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-      const target = document.getElementById(tabId);
-      if (target) target.classList.add('active');
-      event.currentTarget.classList.add('active');
+    // Tema Claro / Escuro
+    const themeBtn = document.getElementById('theme-toggle-btn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const cur = document.documentElement.getAttribute('data-theme') || 'light';
+        const next = cur === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', next);
+        localStorage.setItem('ponte.theme', next);
+        renderLucide();
+      });
     }
 
-    const EXEMPLOS = {
-      estatico: "00020101021126670014br.gov.bcb.pix0117clepta2@gmail.com0224Pagamento Servicos Cloud5204000053039865406150.755802BR5911CLEPTA TECH6009SAO PAULO62140510FATURA102963044AEB",
-      dinamico: "00020101021226760014br.gov.bcb.pix2554pix.banco.com.br/qr/v2/cobv/9a8b7c6d5e4f3a2b1c5204000053039865802BR5916E-COMMERCE BRASIL6014RIO DE JANEIRO62070503***63042079",
-      fraude: "00020101021126670014br.gov.bcb.pix0117clepta2@gmail.com0224Pagamento Servicos Cloud5204000053039865406999.995802BR5911CLEPTA TECH6009SAO PAULO62140510FATURA102963044AEB"
-    };
-
-    function carregarExemplo(tipo) {
-      document.getElementById('input-pix').value = EXEMPLOS[tipo] || '';
-      analisarPix();
+    function renderLucide() {
+      if (window.lucide) window.lucide.createIcons();
     }
 
-    async function analisarPix() {
-      const code = document.getElementById('input-pix').value.trim();
-      if (!code) {
-        alert('Por favor, informe ou cole um código Pix Copia e Cola.');
-        return;
-      }
+    // Navegação de Abas
+    const tabBtns = document.querySelectorAll('.tab-nav-btn, .primary-nav .nav-link[data-view]');
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabKey = btn.dataset.tab || btn.dataset.view;
+        if (!tabKey) return;
+        document.querySelectorAll('.tab-nav-btn').forEach(b => b.classList.toggle('is-active', b.dataset.tab === tabKey));
+        document.querySelectorAll('.primary-nav .nav-link[data-view]').forEach(b => b.classList.toggle('is-active', b.dataset.view === tabKey));
+        document.querySelectorAll('.tab-pane').forEach(p => p.style.display = 'none');
+        const target = document.getElementById('section-' + tabKey);
+        if (target) target.style.display = 'block';
 
-      let res;
-      if (window.PixValidatorPro) {
-        res = window.PixValidatorPro.decodificar(code);
+        const bread = document.getElementById('breadcrumb-title');
+        const titles = {
+          decodificador: 'Decodificador EMVCo',
+          gerador: 'Gerador Pix Copia e Cola',
+          docs: 'Documentação REST'
+        };
+        if (bread && titles[tabKey]) bread.textContent = titles[tabKey];
+        updateSnippet();
+        renderLucide();
+      });
+    });
+
+    let currentSnippetLang = 'curl';
+    document.querySelectorAll('.snippet-tab').forEach(t => {
+      t.addEventListener('click', () => {
+        document.querySelectorAll('.snippet-tab').forEach(b => b.classList.remove('is-active'));
+        t.classList.add('is-active');
+        currentSnippetLang = t.dataset.lang;
+        updateSnippet();
+      });
+    });
+
+    function getActiveTab() {
+      const active = document.querySelector('.tab-nav-btn.is-active');
+      return active ? active.dataset.tab : 'decodificador';
+    }
+
+    function updateSnippet() {
+      const codeEl = document.getElementById('snippet-code');
+      const tab = getActiveTab();
+
+      if (tab === 'gerador') {
+        const ch = document.getElementById('gen-chave').value;
+        const v = document.getElementById('gen-valor').value;
+        const n = document.getElementById('gen-nome').value;
+        const c = document.getElementById('gen-cidade').value;
+        const payload = JSON.stringify({ chave: ch, valor: parseFloat(v), nome: n, cidade: c });
+        document.getElementById('endpoint-display').textContent = '/api/pix/generate';
+
+        if (currentSnippetLang === 'curl') {
+          codeEl.textContent = `curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/generate" \
+  -H "Authorization: ******" \
+  -H "x-api-key: pix_live_emv_2026" \
+  -H "Content-Type: application/json" \
+  -d '${payload}'`;
+        } else if (currentSnippetLang === 'nodejs') {
+          codeEl.textContent = `const res = await fetch("https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/generate", {
+  method: "POST",
+  headers: { "Authorization": "******", "x-api-key": "pix_live_emv_2026", "Content-Type": "application/json" },
+  body: JSON.stringify(${payload})
+});
+const data = await res.json();
+console.log(data);`;
+        } else if (currentSnippetLang === 'python') {
+          codeEl.textContent = `import requests
+payload = ${payload}
+res = requests.post("https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/generate", json=payload, headers={"Authorization": "******", "x-api-key": "pix_live_emv_2026"})
+print(res.json())`;
+        } else if (currentSnippetLang === 'php') {
+          codeEl.textContent = `$ch = curl_init("https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/generate");
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, '${payload}');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: ******", "x-api-key: pix_live_emv_2026", "Content-Type: application/json"]);
+$res = curl_exec($ch);
+print_r(json_decode($res, true));`;
+        }
       } else {
-        // Fallback para API remota
-        try {
-          const resp = await fetch('/api/pix/decodificar', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ codigo: code })
-          });
-          res = await resp.json();
-        } catch (e) {
-          alert('Erro ao decodificar: ' + e.message);
-          return;
+        const raw = document.getElementById('pix-input').value.trim();
+        const payload = JSON.stringify({ payload: raw });
+        document.getElementById('endpoint-display').textContent = '/api/pix/decode';
+
+        if (currentSnippetLang === 'curl') {
+          codeEl.textContent = `curl -X POST "https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/decode" \
+  -H "Authorization: ******" \
+  -H "x-api-key: pix_live_emv_2026" \
+  -H "Content-Type: application/json" \
+  -d '${payload}'`;
+        } else if (currentSnippetLang === 'nodejs') {
+          codeEl.textContent = `const res = await fetch("https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/decode", {
+  method: "POST",
+  headers: { "Authorization": "******", "x-api-key": "pix_live_emv_2026", "Content-Type": "application/json" },
+  body: JSON.stringify(${payload})
+});
+const data = await res.json();
+console.log(data);`;
+        } else if (currentSnippetLang === 'python') {
+          codeEl.textContent = `import requests
+payload = ${payload}
+res = requests.post("https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/decode", json=payload, headers={"Authorization": "******", "x-api-key": "pix_live_emv_2026"})
+print(res.json())`;
+        } else if (currentSnippetLang === 'php') {
+          codeEl.textContent = `$ch = curl_init("https://pixvalidator-pro-api.pixvalidator.workers.dev/api/pix/decode");
+curl_setopt($ch, CURLOPT_POST, 1);
+curl_setopt($ch, CURLOPT_POSTFIELDS, '${payload}');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: ******", "x-api-key: pix_live_emv_2026", "Content-Type: application/json"]);
+$res = curl_exec($ch);
+print_r(json_decode($res, true));`;
         }
       }
-
-      document.getElementById('resultado-decodificacao').style.display = 'block';
-      const badge = document.getElementById('badge-status-pix');
-      if (res.valido) {
-        badge.className = 'tag-status tag-success';
-        badge.innerHTML = '✔ Pix 100% Válido &amp; Autêntico';
-      } else {
-        badge.className = 'tag-status tag-danger';
-        badge.innerHTML = '✖ Inválido ou Adulterado';
-      }
-
-      document.getElementById('res-valor').textContent = res.transacao ? res.transacao.valorFormatado : 'R$ 0,00';
-      document.getElementById('res-chave').textContent = res.chave && res.chave.valor ? res.chave.valor : (res.transacao && res.transacao.urlPayload ? 'Payload Dinâmico' : '--');
-      document.getElementById('res-tipo-chave').textContent = res.chave ? `Tipo: ${res.chave.tipo} (Válida: ${res.chave.valida ? 'Sim' : 'Não'})` : '';
-      document.getElementById('res-beneficiario').textContent = res.recebedor ? res.recebedor.nome : '--';
-      document.getElementById('res-cidade').textContent = res.recebedor ? `${res.recebedor.cidade} - ${res.recebedor.pais}` : '';
-      document.getElementById('res-txid').textContent = res.transacao ? res.transacao.txid : '--';
-      
-      const crcInfo = res.seguranca ? `Recebido: ${res.seguranca.crcEsperado} | Calculado: ${res.seguranca.crcCalculado} (${res.seguranca.crcValido ? 'MATCH OK' : 'DIVERGENTE - FRAUDE'})` : '--';
-      document.getElementById('res-crc').textContent = crcInfo;
-      document.getElementById('res-tipo-payload').textContent = res.tipo || 'ESTÁTICO';
-
-      document.getElementById('res-json-view').textContent = JSON.stringify(res, null, 2);
     }
 
-    function gerarCodigoPix() {
-      const chave = document.getElementById('gen-chave').value.trim();
-      const nome = document.getElementById('gen-nome').value.trim();
-      const cidade = document.getElementById('gen-cidade').value.trim();
-      const valStr = document.getElementById('gen-valor').value;
-      const txid = document.getElementById('gen-txid').value.trim();
-      const info = document.getElementById('gen-info').value.trim();
+    document.getElementById('btn-copy-code').addEventListener('click', () => {
+      const txt = document.getElementById('snippet-code').textContent;
+      navigator.clipboard.writeText(txt).then(() => alert('Snippet copiado com sucesso!'));
+    });
 
-      const valor = valStr ? parseFloat(valStr) : null;
+    // ── LÓGICA DE DECODIFICAÇÃO ──
+    async function executarDecodificacao() {
+      const raw = document.getElementById('pix-input').value.trim();
+      updateSnippet();
 
-      let res;
-      if (window.PixValidatorPro) {
-        res = window.PixValidatorPro.gerarPix({ chave, nome, cidade, valor, txid, infoAdicional: info });
-      } else {
-        alert('Carregando biblioteca...');
-        return;
+      const consoleOutput = document.getElementById('console-output');
+      const consoleStatus = document.getElementById('console-status');
+      const consoleLat = document.getElementById('console-latency');
+      consoleOutput.textContent = 'Decodificando payload EMVCo e checando CRC16...';
+
+      const t0 = performance.now();
+      try {
+        const decoded = PixValidatorPro.decodificar(raw);
+        const lat = Math.round(performance.now() - t0);
+
+        consoleStatus.textContent = decoded.valido ? '200 OK' : '400 ALERTA';
+        consoleStatus.className = decoded.valido ? 'badge-200' : 'badge-500';
+        consoleLat.textContent = `Latência: ${lat}ms`;
+        consoleOutput.textContent = JSON.stringify(decoded, null, 2);
+
+        if (decoded.valido) {
+          document.getElementById('val-chave').textContent = decoded.chave || '-';
+          document.getElementById('val-tipo-chave').innerHTML = `<span class="status-badge-pill blue">${decoded.tipoChave || 'N/A'}</span>`;
+          document.getElementById('val-valor').textContent = decoded.valor ? `R$ ${Number(decoded.valor).toFixed(2).replace('.', ',')}` : 'Não definido (Livre)';
+          document.getElementById('val-beneficiario').textContent = decoded.beneficiario || decoded.nomeRecebedor || '-';
+          document.getElementById('val-cidade').textContent = decoded.cidade || '-';
+          document.getElementById('val-txid').textContent = decoded.txid || '***';
+          document.getElementById('val-crc16').innerHTML = '<span class="status-badge-pill green">VÁLIDO (Tag 63 Íntegra)</span>';
+        } else {
+          document.getElementById('val-chave').textContent = '-';
+          document.getElementById('val-tipo-chave').innerHTML = '<span class="status-badge-pill red">Inválido</span>';
+          document.getElementById('val-valor').textContent = 'R$ 0,00';
+          document.getElementById('val-beneficiario').textContent = '-';
+          document.getElementById('val-cidade').textContent = '-';
+          document.getElementById('val-txid').textContent = '-';
+          document.getElementById('val-crc16').innerHTML = `<span class="status-badge-pill red">${decoded.erro || 'CRC16 Incorreto'}</span>`;
+        }
+      } catch (err) {
+        consoleOutput.textContent = `Erro: ${err.message}`;
       }
-
-      if (!res.ok) {
-        alert('Erro ao gerar Pix: ' + res.erro);
-        return;
-      }
-
-      document.getElementById('resultado-gerador').style.display = 'block';
-      document.getElementById('gen-payload-output').value = res.payload;
     }
 
-    function copiarPixGerado() {
-      const txt = document.getElementById('gen-payload-output');
-      txt.select();
-      navigator.clipboard.writeText(txt.value);
-      alert('Código Pix Copia e Cola copiado com sucesso!');
-    }
+    document.getElementById('btn-exec-decodificar').addEventListener('click', executarDecodificacao);
 
-    function testarPixGerado() {
-      const code = document.getElementById('gen-payload-output').value;
-      switchTab('tab-decodificar');
-      document.getElementById('input-pix').value = code;
-      analisarPix();
-    }
+    // ── LÓGICA DE GERAÇÃO DE PIX ──
+    document.getElementById('btn-exec-gerar-pix').addEventListener('click', () => {
+      const ch = document.getElementById('gen-chave').value;
+      const v = document.getElementById('gen-valor').value;
+      const n = document.getElementById('gen-nome').value;
+      const c = document.getElementById('gen-cidade').value;
 
-    function validarChaveIsolada() {
-      const val = document.getElementById('input-chave-teste').value.trim();
-      if (!val) {
-        alert('Informe a chave.');
-        return;
+      const res = PixValidatorPro.gerar({
+        chave: ch,
+        valor: parseFloat(v),
+        nome: n,
+        cidade: c,
+        txid: 'PNT' + Date.now().toString().slice(-6)
+      });
+
+      if (res && res.payload) {
+        document.getElementById('pix-input').value = res.payload;
+        document.querySelector('.tab-nav-btn[data-tab="decodificador"]').click();
+        executarDecodificacao();
       }
-      if (!window.PixValidatorPro) return;
-      const res = window.PixValidatorPro.validarChave(val);
-      document.getElementById('res-chave-box').style.display = 'block';
-      const badge = document.getElementById('badge-chave');
-      if (res.valido) {
-        badge.className = 'tag-status tag-success';
-        badge.textContent = 'Chave Válida';
-      } else {
-        badge.className = 'tag-status tag-danger';
-        badge.textContent = 'Chave Inválida';
-      }
-      document.getElementById('tipo-chave-detectada').textContent = 'Tipo: ' + res.tipo;
-      document.getElementById('desc-chave-res').textContent = res.erro ? `Erro: ${res.erro}` : `Chave normalizada: ${res.chaveLimpa}`;
-    }
+    });
+
+    document.getElementById('btn-run-sandbox').addEventListener('click', executarDecodificacao);
+
+    // Inicialização
+    renderLucide();
+    setTimeout(() => {
+      renderLucide();
+      executarDecodificacao();
+    }, 100);
   </script>
-  <footer class="ponte-footer" style="margin-top: 3rem;">
-    <div style="max-width:1160px; margin:0 auto; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
-      <div>
-        <strong>PixValidator Pro</strong> &bull; Validador EMVCo &amp; Decodificador Pix Borda Anycast
-      </div>
-      <div>
-        Integrado ao ecossistema <a href="https://ponte-marketplace.maputo2.workers.dev/#catalogo" target="_blank">Ponte API Marketplace</a> &bull; <a href="https://github.com/clepta2/pixvalidator-pro" target="_blank">SDK Oficial no GitHub</a>
-      </div>
-    </div>
-  </footer>
 </body>
 </html>

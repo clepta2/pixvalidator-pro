@@ -7,6 +7,7 @@
  */
 
 import { PixValidatorPro } from './pixvalidator-pro.js';
+import { STYLES_CSS, HTML_INDEX, OZPRO_MARK_SVG } from './site-assets.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -102,6 +103,27 @@ export default {
       });
     }
 
+    // ── ROTA: ARQUIVOS ESTÁTICOS DO SITE PRÓPRIO (TEMPLATE PONTE API MARKETPLACE) ──
+    if (path === '/styles.css' || path === '/ponte-suite.css') {
+      return new Response(STYLES_CSS, {
+        headers: {
+          ...CORS_HEADERS,
+          'Content-Type': 'text/css; charset=utf-8',
+          'Cache-Control': 'public, max-age=604800, s-maxage=2592000'
+        }
+      });
+    }
+
+    if (path === '/brand/ozpro-mark.svg') {
+      return new Response(OZPRO_MARK_SVG, {
+        headers: {
+          ...CORS_HEADERS,
+          'Content-Type': 'image/svg+xml; charset=utf-8',
+          'Cache-Control': 'public, max-age=2592000, s-maxage=2592000'
+        }
+      });
+    }
+
     // 4. Healthcheck e Status
     if (path === '/health' || path === '/status') {
       return new Response(JSON.stringify({
@@ -146,9 +168,13 @@ export default {
           headers: { 'Content-Type': 'application/json; charset=utf-8', ...CORS_HEADERS }
         });
       }
-      return new Response(getHtmlDemo(), {
+      return new Response(HTML_INDEX, {
         status: 200,
-        headers: { 'Content-Type': 'text/html; charset=utf-8' }
+        headers: {
+          ...CORS_HEADERS,
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'public, max-age=300, s-maxage=3600'
+        }
       });
     }
 
@@ -270,11 +296,8 @@ export default {
     if (path === '/api/pix/validar' || path === '/api/validar') {
       let codigo = url.searchParams.get('codigo') || url.searchParams.get('payload') || '';
 
-      if (!codigo && request.method === 'POST') {
-        try {
-          const body = await request.json();
-          codigo = body.codigo || body.payload || '';
-        } catch (_) {}
+      if (!codigo && bodyJson) {
+        codigo = bodyJson.codigo || bodyJson.payload || '';
       }
 
       const resDecod = PixValidatorPro.decodificar(codigo);
@@ -299,9 +322,7 @@ export default {
     if (path === '/api/pix/gerar' || path === '/api/gerar' || path === '/api/pix/copia-e-cola' || path === '/api/pix/gerar-qrcode') {
       let params = {};
       if (request.method === 'POST') {
-        try {
-          params = await request.json();
-        } catch (_) {}
+        params = bodyJson || {};
       } else {
         params = {
           chave: url.searchParams.get('chave') || '',
@@ -341,10 +362,8 @@ export default {
     if (path === '/api/pix/extrair' || path === '/api/extrair') {
       let texto = '';
       if (request.method === 'POST') {
-        try {
-          const body = await request.json();
-          texto = body.texto || body.mensagem || body.conteudo || '';
-        } catch (_) {}
+        const body = bodyJson || {};
+        texto = body.texto || body.mensagem || body.conteudo || '';
       } else {
         texto = url.searchParams.get('texto') || '';
       }
